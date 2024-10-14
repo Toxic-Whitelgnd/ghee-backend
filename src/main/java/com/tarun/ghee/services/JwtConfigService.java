@@ -33,7 +33,7 @@ public class JwtConfigService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer(jwtIssuer)
                 .issuedAt(now)
-                .expiresAt(now.plusSeconds(24 * 3600))
+                .expiresAt(now.plusSeconds( 20 * 60 * 1000))
                 .subject(ownerEntity.getUsername())
                 .claim("role",ownerEntity.getRoles())
                 .build();
