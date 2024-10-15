@@ -2,7 +2,7 @@ spring:
   data:
     mongodb:
       uri: mongodb+srv://tarun:f1StMmlq25XUsg2e@cluster0.4d90q.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-      database: GheeTestDB
+      database: GheeTestDBcopy
       auto-index-creation: true
 
 server:

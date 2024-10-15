@@ -1,8 +1,11 @@
 package com.tarun.ghee.controller.auth;
 
+import com.tarun.ghee.dto.User.ProfileDTO;
 import com.tarun.ghee.dto.User.UserDTO;
 import com.tarun.ghee.dto.User.UserLoginDTO;
+import com.tarun.ghee.entity.User.UserModel;
 import com.tarun.ghee.services.auth.AuthServices;
+import com.tarun.ghee.services.auth.ProfileServices;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -22,6 +25,8 @@ public class authController {
     @Autowired
     private AuthenticationManager am;
 
+    @Autowired
+    private ProfileServices ps;
 
     @GetMapping
     public ResponseEntity<?> TestApi(){
@@ -49,6 +54,11 @@ public class authController {
             log.error("Invalid User {0}",e.getMessage());
         }
         return ResponseEntity.badRequest().body("Invalid username or password");
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(@RequestBody ProfileDTO profileDTO){
+        return ps.updateProfile(profileDTO);
     }
 
 }
