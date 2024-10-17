@@ -2,6 +2,7 @@ package com.tarun.ghee.services.auth;
 
 import com.tarun.ghee.dto.User.UserDTO;
 import com.tarun.ghee.dto.User.UserLoginDTO;
+import com.tarun.ghee.dto.User.UserProcessDTO;
 import com.tarun.ghee.entity.User.UserModel;
 import com.tarun.ghee.repositary.auth.AuthRepositary;
 import com.tarun.ghee.services.JwtConfigService;
@@ -79,5 +80,52 @@ public class AuthServices {
         response.put("user", us);
         log.info("Login Successfull");
         return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<?> registerOnProcessUser(UserProcessDTO userDTO){
+        var bcryptEncoder = new BCryptPasswordEncoder();
+
+        UserModel us = new UserModel();
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
+        us.setUsername(userDTO.getName());
+        us.setPassword(bcryptEncoder.encode(userDTO.getMobilenumber()));
+        us.setEmailaddress(userDTO.getEmail());
+        us.setMobilenumber(userDTO.getMobilenumber());
+        us.setAddress(userDTO.getAddress());
+        us.setState(userDTO.getState());
+        us.setPincode(userDTO.getPincode());
+        us.setDistrict(userDTO.getDistrict());
+
+        us.setRoles(roles);
+
+        var otheruser = ar.findByemailaddress(userDTO.getEmail());
+        if (userDTO.getName() == null || userDTO.getName().isEmpty()) {
+            return ResponseEntity.badRequest().body("Username cannot be null or empty");
+        }
+
+        if (otheruser != null) {
+            return ResponseEntity.badRequest().body("Username already exists");
+        }
+
+        try{
+
+            ar.save(us);
+            log.info("USER CREATED");
+
+            String jwtToken = jwt.createJWTtokens(us);
+
+            var response = new HashMap<String, Object>();
+            response.put("token", jwtToken);
+            response.put("user", us);
+
+            return ResponseEntity.ok(response);
+        }catch (Exception e){
+            log.error("Error while creating USER {}", e.getMessage());
+        }
+
+
+
+        return new ResponseEntity<>(userDTO, HttpStatus.BAD_REQUEST);
     }
 }

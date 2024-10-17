@@ -12,6 +12,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -31,11 +33,11 @@ public class ProductServices {
     @Autowired
     private ProductRepositary pr;
 
-    public ResponseEntity<?> addProduct(ProductDTO productDTO,List<MultipartFile> images) throws IOException {
-        //extract from the images
+    public ResponseEntity<?> addProductAsync(ProductDTO productDTO, List<MultipartFile> images) throws IOException {
         List<ImageData> imageDataList = new ArrayList<>();
         ProductModel productModel = new ProductModel();
-        try{
+        try {
+            // Process each image
             for (MultipartFile file : images) {
                 ImageData imageData = new ImageData();
                 imageData.setFileName(file.getOriginalFilename());
@@ -58,15 +60,16 @@ public class ProductServices {
             // Add images to the product object
             productModel.setImages(imageDataList);
 
+            // Save product
             pr.save(productModel);
-            log.info("Product added Successfully");
+            log.info("Product added successfully");
+
             return ResponseEntity.ok().body(productModel);
+
         } catch (Exception e) {
-            log.error("Error occured while adding the product",e.getMessage());
+            log.error("Error occurred while adding the product", e);
+            return ResponseEntity.badRequest().body("Check the server");
         }
-
-
-        return ResponseEntity.badRequest().body("Check the server");
     }
 
     public ResponseEntity<?> getAllProduct() {

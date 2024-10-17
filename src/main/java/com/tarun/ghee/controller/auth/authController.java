@@ -3,6 +3,7 @@ package com.tarun.ghee.controller.auth;
 import com.tarun.ghee.dto.User.ProfileDTO;
 import com.tarun.ghee.dto.User.UserDTO;
 import com.tarun.ghee.dto.User.UserLoginDTO;
+import com.tarun.ghee.dto.User.UserProcessDTO;
 import com.tarun.ghee.entity.User.UserModel;
 import com.tarun.ghee.services.auth.AuthServices;
 import com.tarun.ghee.services.auth.ProfileServices;
@@ -37,6 +38,11 @@ public class authController {
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO){
         return as.registerUser(userDTO);
     }
+    @PostMapping("/registeronprocess")
+    public ResponseEntity<?> registeronProcessUser(@RequestBody UserProcessDTO userDTO){
+        return as.registerOnProcessUser(userDTO);
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> loginPGuser(@RequestBody UserLoginDTO ownerLoginDTO){

@@ -35,6 +35,7 @@ public class JwtConfigService {
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds( 20 * 60 * 1000))
                 .subject(ownerEntity.getUsername())
+                .subject(ownerEntity.getEmailaddress())
                 .claim("role",ownerEntity.getRoles())
                 .build();
 

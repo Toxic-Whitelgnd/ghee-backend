@@ -1,18 +1,26 @@
 package com.tarun.ghee.services.email;
 
 import com.tarun.ghee.dto.email.EmailAddDTO;
+import com.tarun.ghee.dto.email.EmailSendDTO;
 import com.tarun.ghee.entity.User.UserModel;
 import com.tarun.ghee.entity.email.EmailModel;
+import com.tarun.ghee.entity.order.OrderModel;
 import com.tarun.ghee.repositary.email.EmailRepositary;
+import com.tarun.ghee.repositary.order.OrderRepositary;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.tarun.ghee.utils.Utils.PrepareEmail;
+import static com.tarun.ghee.utils.Utils.ReplaceText;
 
 @Slf4j
 @Service
@@ -20,6 +28,16 @@ public class EmailServices {
 
     @Autowired
     private EmailRepositary er;
+
+    @Autowired
+    private OrderRepositary or;
+
+    @Value(("${EMAIL}"))
+    private String FromMail;
+
+    @Autowired
+    private EmailSender es;
+
     public ResponseEntity<?> addEmailTemplate (EmailAddDTO emailAddDTO){
         //check for the same title,
         EmailModel em = er.findBytitle(emailAddDTO.getTitle());
@@ -97,6 +115,41 @@ public class EmailServices {
         } catch (Exception e) {
             log.error("Failed to delete"+e.getMessage());
             return ResponseEntity.badRequest().body("Email Tempalte Failed to delete");
+        }
+    }
+
+    public ResponseEntity<?> updateAndSendEmail(EmailSendDTO emailSendDTO) {
+        try{
+            //Fetch the default tempalte for the status
+            List<EmailModel> ls = er.findBystatus(emailSendDTO.getStatus());
+            Optional<EmailModel> emailTempalte = ls.stream().filter(EmailModel::isIsdefault).findFirst();
+
+            //CREATE A INTIALTEMPALTE, IF NO DEFAULTFOUND
+            EmailModel email = emailTempalte.isPresent() ? emailTempalte.get() : new EmailModel();
+            String subject = email.getSubject();
+            String body = email.getBody();
+
+            //Fetch the orders
+            OrderModel om = or.findByorderid(emailSendDTO.getOrderid());
+
+            String replacedSubject = ReplaceText(subject,om);
+            String repalcedBody = ReplaceText(body, om);
+
+            //Prepare and send email
+            SimpleMailMessage sm = PrepareEmail(replacedSubject,repalcedBody,
+                    om.getEmailaddress(),FromMail);
+
+            boolean res =  es.SendEmail(sm);
+            if(res){
+                om.setStatus(email.getStatus());
+                or.save(om);
+                return ResponseEntity.ok().body("Email Delivered");
+            }
+
+            return ResponseEntity.internalServerError().body("Problem in sending the mail");
+        } catch (Exception e) {
+            log.error("Failed to send Email"+ e.getMessage());
+            return ResponseEntity.internalServerError().body("Server Error");
         }
     }
 }

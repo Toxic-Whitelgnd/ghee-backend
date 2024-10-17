@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @RestController
@@ -22,14 +23,14 @@ public class productController {
 
     @PostMapping
     public ResponseEntity<?> addProduct(@RequestPart("data") ProductDTO productDTO,
-                                        @RequestPart("images") List<MultipartFile> images)
+                                                           @RequestPart("images") List<MultipartFile> images)
             throws IOException {
         try{
-            return ps.addProduct(productDTO,images);
+            return ps.addProductAsync(productDTO,images);
         } catch (Exception e) {
             log.error("Error",e.getMessage());
         }
-        return  ResponseEntity.internalServerError().body("Error in the Saving at ProductController ");
+        return ResponseEntity.internalServerError().body("Error in the Saving at ProductController ");
     }
 
     @GetMapping

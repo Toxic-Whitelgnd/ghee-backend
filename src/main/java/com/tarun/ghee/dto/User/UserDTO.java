@@ -18,10 +18,11 @@ public class UserDTO {
     @Indexed(unique = true)
     @NonNull
     private String username;
-    @NonNull
+
     private String password;
     @NonNull
     private String mobilenumber;
+    @Indexed(unique = true)
     @NonNull
     private String emailaddress;
 
