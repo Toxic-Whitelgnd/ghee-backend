@@ -139,14 +139,12 @@ public class EmailServices {
             SimpleMailMessage sm = PrepareEmail(replacedSubject,repalcedBody,
                     om.getEmailaddress(),FromMail);
 
-            boolean res =  es.SendEmail(sm);
-            if(res){
+             es.SendEmail(sm);
+
                 om.setStatus(email.getStatus());
                 or.save(om);
                 return ResponseEntity.ok().body("Email Delivered");
-            }
 
-            return ResponseEntity.internalServerError().body("Problem in sending the mail");
         } catch (Exception e) {
             log.error("Failed to send Email"+ e.getMessage());
             return ResponseEntity.internalServerError().body("Server Error");

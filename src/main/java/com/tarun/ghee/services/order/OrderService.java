@@ -115,10 +115,10 @@ public class OrderService {
                 SimpleMailMessage sm = PrepareEmail(replacedSubject,repalcedBody,
                         oe.getEmailaddress(),FromMail);
 
-                boolean res = es.SendEmail(sm);
-                if(res){
-                    log.info("Email delivered for the Client");
-                }
+                es.SendEmail(sm);
+
+                log.info("Email delivered for the Client");
+
             }
             if(s.isEmailsetting()){
                 String replacedSubject = ReplaceText(EmailConstants.intialSubject,oe);
@@ -126,10 +126,10 @@ public class OrderService {
                 SimpleMailMessage sm = PrepareEmail(replacedSubject,repalcedBody,
                         oe.getEmailaddress(),FromMail);
 
-                boolean res = es.SendEmail(sm);
-                if(res){
-                    log.info("Email delivered for Bussiness Contact");
-                }
+                es.SendEmail(sm);
+
+                log.info("Email delivered for Bussiness Contact");
+
             }
 
             return ResponseEntity.ok().body("Updated and Email Delivered");

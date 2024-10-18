@@ -28,4 +28,13 @@ public class EmailConstants {
             "Thank you for your continued dedication to providing excellent service to our customers.\n" +
             "\n" ;
 
+    public static String adminAccessSubject = "ADMIN ACCESS GRANTED";
+    public static String adminAccessBody = "Hi, \n\nYou have been granted admin access. You can now access admin features in the system. If you have any questions, feel free to contact support.\n\nBest regards,\nGHEE";
+
+
+
+    public static String adminRevokeSubject = "ADMIN ACCESS REVOKED";
+    public static String adminRevokeBody = "Hi, \n\nYour admin access has been revoked. You no longer have access to the admin features in the system. If you believe this is an error or if you need assistance, please contact support.\n\nBest regards,\nGHEE";
+
+
 }

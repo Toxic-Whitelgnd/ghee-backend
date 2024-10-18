@@ -15,16 +15,14 @@ public class EmailSender {
     private JavaMailSender jm;
 
     @Async
-    public boolean  SendEmail(SimpleMailMessage sm){
+    public void SendEmail(SimpleMailMessage sm) {
 
-        try{
+        try {
             jm.send(sm);
             log.info("Email Delivered");
         } catch (Exception e) {
-            log.error("Failed to send the Email"+e.getMessage());
-            return false;
+            log.error("Failed to send the Email" + e.getMessage());
         }
 //        zydv pedw houl ulbi
-        return true;
     }
 }
