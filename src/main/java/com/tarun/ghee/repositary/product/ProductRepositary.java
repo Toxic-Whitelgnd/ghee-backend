@@ -1,4 +1,4 @@
-package com.tarun.ghee.repositary;
+package com.tarun.ghee.repositary.product;
 
 import com.tarun.ghee.entity.product.ProductModel;
 import org.bson.types.ObjectId;
@@ -8,3 +8,5 @@ public interface ProductRepositary extends MongoRepository<ProductModel, ObjectI
     ProductModel findByname(String name);
     ProductModel findByid(ObjectId id);
 }
+
+

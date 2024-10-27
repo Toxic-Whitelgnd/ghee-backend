@@ -1,6 +1,7 @@
 package com.tarun.ghee.dto.product;
 
 import com.tarun.ghee.entity.product.ImageData;
+import com.tarun.ghee.entity.product.ProductImages;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,4 +26,5 @@ public class ProductDTO {
     private int ratings;
     @NonNull
     private int quantity;
+
 }

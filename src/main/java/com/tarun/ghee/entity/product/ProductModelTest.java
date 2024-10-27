@@ -7,7 +7,6 @@ import lombok.NonNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -15,8 +14,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "products")
-public class ProductModel {
+@Document(collection = "productstest")
+public class ProductModelTest {
     @Id
     private ObjectId id;
 
@@ -32,9 +31,7 @@ public class ProductModel {
     private List<Integer> quantitysize;
     private String ratingStar;
     private int ratings;
-    private List<ImageData> images;
+
     @NonNull
     private int quantity;
-
 }
-
