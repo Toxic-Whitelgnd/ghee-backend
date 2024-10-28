@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
+//will remove the product controller and related service
 @Slf4j
 @RestController
 @RequestMapping("/product")
