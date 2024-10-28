@@ -24,4 +24,6 @@ public class OrderController {
     public ResponseEntity<?> getallOrderforAdmin(){
         return os.getAllAdminOrders();
     }
+
+
 }

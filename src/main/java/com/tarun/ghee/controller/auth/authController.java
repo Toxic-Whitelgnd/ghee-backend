@@ -1,9 +1,6 @@
 package com.tarun.ghee.controller.auth;
 
-import com.tarun.ghee.dto.User.ProfileDTO;
-import com.tarun.ghee.dto.User.UserDTO;
-import com.tarun.ghee.dto.User.UserLoginDTO;
-import com.tarun.ghee.dto.User.UserProcessDTO;
+import com.tarun.ghee.dto.User.*;
 import com.tarun.ghee.entity.User.UserModel;
 import com.tarun.ghee.services.auth.AuthServices;
 import com.tarun.ghee.services.auth.ProfileServices;
@@ -65,6 +62,16 @@ public class authController {
     @PutMapping("/profile")
     public ResponseEntity<?> updateProfile(@RequestBody ProfileDTO profileDTO){
         return ps.updateProfile(profileDTO);
+    }
+
+    @PostMapping("/resetpassword")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO){
+        return ps.resetPassword(resetPasswordDTO);
+    }
+
+    @PostMapping("/resetnewpassword")
+    public ResponseEntity<?> resetNewPassword(@RequestBody UserLoginDTO userLoginDTO){
+        return ps.resetNewPassword(userLoginDTO);
     }
 
 }

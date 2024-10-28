@@ -37,4 +37,19 @@ public class EmailConstants {
     public static String adminRevokeBody = "Hi, \n\nYour admin access has been revoked. You no longer have access to the admin features in the system. If you believe this is an error or if you need assistance, please contact support.\n\nBest regards,\nGHEE";
 
 
+    public static String resetPasswordSubject = "Passsword Reset Request";
+    public static String resetPasswordBody ="<html>" +
+            "<body>" +
+            "<p>Dear User,</p>" +
+            "<p>We received a request to reset your password. Click the button below to reset it:</p>" +
+            "<a href='" + "RESETURL" + "' style='text-decoration: none;'>" +
+            "<button style='padding: 10px 20px; background-color: #EFC850; color: white; border: none; border-radius: 5px; cursor: pointer;'>" +
+            "Reset Password" +
+            "</button>" +
+            "</a>" +
+            "<p>If you didn't request this, you can ignore this email.</p>" +
+            "<p>Best regards,<br>Ghee</p>" +
+            "</body>" +
+            "</html>";
+
 }

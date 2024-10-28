@@ -27,6 +27,8 @@ public class OrderModel {
     private String state;
     private String district;
 
+    private String paymentmode;
+
     private List<ItemModel> items;
     private double totalAmount;
     private String receipt;

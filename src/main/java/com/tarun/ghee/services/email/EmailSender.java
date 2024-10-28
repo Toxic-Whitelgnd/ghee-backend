@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +26,17 @@ public class EmailSender {
             log.error("Failed to send the Email" + e.getMessage());
         }
 //        zydv pedw houl ulbi
+    }
+
+    @Async
+    public void SendEmailMessage(MimeMessagePreparator sm) {
+
+        try {
+
+            jm.send((MimeMessagePreparator) sm);
+            log.info("Email Delivered for Resetin Password");
+        } catch (Exception e) {
+            log.error("Failed to send the Email for reseting the Password" + e.getMessage());
+        }
     }
 }

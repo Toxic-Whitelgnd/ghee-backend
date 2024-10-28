@@ -77,6 +77,7 @@ public class OrderService {
             oe.setReceipt(orderDTO.getReceipt());
             oe.setNote(orderDTO.getNote());
             oe.setCreatedAt(orderDTO.getCreatedAt());
+            oe.setPaymentmode(orderDTO.getPaymentmode());
 
             oe.setUsername(orderDTO.getUsername());
             oe.setEmailaddress(orderDTO.getEmailaddress());
@@ -90,6 +91,46 @@ public class OrderService {
 
             or.save(oe);
             log.info("Created the order"+id+"SAVED THE ORDER TO DB");
+            return ResponseEntity.ok().body(oe);
+
+        } catch (Exception e) {
+            log.error("ERROR CREATING THE ORDER"+e.getMessage());
+        }
+
+        return ResponseEntity.internalServerError().body("Failed to create a order");
+    }
+
+    public ResponseEntity<?> createOrderForCOD(OrderDTO orderDTO)  {
+        try{
+            OrderModel oe = new OrderModel();
+
+            oe.setTotalAmount(orderDTO.getTotalAmount());
+            List<ItemModel> ls = orderDTO.getItems();
+            for(ItemModel i: ls){
+                i.setStatus(OrderStatus.PREPARATION.toString());
+            }
+            oe.setItems(ls);
+            oe.setReceipt(orderDTO.getReceipt());
+            oe.setNote(orderDTO.getNote());
+            oe.setCreatedAt(orderDTO.getCreatedAt());
+            oe.setPaymentmode(orderDTO.getPaymentmode());
+
+            oe.setUsername(orderDTO.getUsername());
+            oe.setEmailaddress(orderDTO.getEmailaddress());
+            oe.setAddress(orderDTO.getAddress());
+            oe.setDistrict(orderDTO.getDistrict());
+            oe.setPincode(orderDTO.getPincode());
+            oe.setState(orderDTO.getState());
+            oe.setMobilenumber(orderDTO.getMobilenumber());
+
+            oe.setStatus(OrderStatus.PREPARATION.toString());
+
+            oe.setOrderid("");
+            oe.setPaymentid("");
+            oe.setPaymentsignature("");
+
+            or.save(oe);
+            log.info("Created the order"+"COD"+"SAVED THE ORDER TO DB");
             return ResponseEntity.ok().body(oe);
 
         } catch (Exception e) {

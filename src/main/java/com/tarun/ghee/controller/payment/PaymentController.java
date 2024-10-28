@@ -20,6 +20,11 @@ public class PaymentController {
         return os.createOrder(orderDTO);
     }
 
+    @PostMapping("/codorder")
+    public ResponseEntity<?> creteCODOrder(@RequestBody OrderDTO orderDTO){
+        return os.createOrderForCOD(orderDTO);
+    }
+
     @PutMapping("/updateorder")
     public ResponseEntity<?> updateOrder(@RequestBody PaymentDTO paymentDTO){
         return os.updateOrder(paymentDTO);
