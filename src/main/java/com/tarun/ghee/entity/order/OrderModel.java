@@ -39,5 +39,7 @@ public class OrderModel {
     private String paymentid;
     private String paymentsignature;
 
+    private String paymentverification;
+
     private String status;
 }

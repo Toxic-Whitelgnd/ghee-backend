@@ -1,5 +1,6 @@
 package com.tarun.ghee.utils;
 
+import com.tarun.ghee.entity.order.ItemModel;
 import com.tarun.ghee.entity.order.OrderModel;
 import com.tarun.ghee.enums.EmailContants;
 import jakarta.mail.MessagingException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Component
 public  class Utils {
@@ -39,6 +41,10 @@ public  class Utils {
         values[EmailContants.PINCODE.ordinal()] = String.valueOf(order.getPincode());
         values[EmailContants.DISTRICT.ordinal()] = order.getDistrict();
         values[EmailContants.STATE.ordinal()] = order.getState();
+
+        // Add item details for ITEMS placeholder
+        String itemsDetails = formatItems(order.getItems());  // Method to format items list
+        template = template.replace("ITEMS", itemsDetails);
 
         for (EmailContants constant : EmailContants.values()) {
             String placeholder = constant.name();
@@ -78,5 +84,19 @@ public  class Utils {
 
     public  String ResetUrl(String encodedEmail ){
         return url+"/#/resetpassword?email=" + encodedEmail;
+    }
+
+    private static String formatItems(List<ItemModel> items) {
+        StringBuilder itemsDetails = new StringBuilder();
+
+        for (ItemModel item : items) {
+            itemsDetails.append("Name: ").append(item.getName())
+                    .append(", Item Qty: ").append(item.getItemQty())
+                    .append(", Quantity: ").append(item.getQuantity())
+                    .append(", Final Price: ").append(item.getFinalPrice())
+                    .append("\n");
+        }
+
+        return itemsDetails.toString();
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+
 @Slf4j
 @Service
 public class EmailSender {
@@ -24,6 +26,20 @@ public class EmailSender {
             log.info("Email Delivered");
         } catch (Exception e) {
             log.error("Failed to send the Email" + e.getMessage());
+        }
+//        zydv pedw houl ulbi
+    }
+
+    @Async
+    public CompletableFuture<Void> SendEmailBussiness(SimpleMailMessage sm) {
+
+        try {
+            jm.send(sm);
+            log.info("Email Delivered");
+            return CompletableFuture.completedFuture(null);
+        } catch (Exception e) {
+            log.error("Failed to send the Email" + e.getMessage());
+            return CompletableFuture.failedFuture(e);
         }
 //        zydv pedw houl ulbi
     }

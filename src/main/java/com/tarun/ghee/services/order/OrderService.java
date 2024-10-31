@@ -1,12 +1,13 @@
 package com.tarun.ghee.services.order;
 
-import com.razorpay.Item;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import com.razorpay.Utils;
 import com.tarun.ghee.constants.EmailConstants;
 import com.tarun.ghee.dto.order.OrderDTO;
 import com.tarun.ghee.dto.order.PaymentDTO;
+import com.tarun.ghee.dto.order.PaymentVerificationDTO;
 import com.tarun.ghee.entity.order.ItemModel;
 import com.tarun.ghee.entity.order.OrderModel;
 import com.tarun.ghee.entity.setting.SettingModel;
@@ -14,6 +15,7 @@ import com.tarun.ghee.enums.OrderStatus;
 import com.tarun.ghee.repositary.order.OrderRepositary;
 import com.tarun.ghee.services.email.EmailSender;
 import com.tarun.ghee.services.setting.SettingServices;
+import com.tarun.ghee.utils.RandomStringGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 import static com.tarun.ghee.utils.Utils.PrepareEmail;
@@ -47,7 +53,6 @@ public class OrderService {
 
     @Autowired
     private EmailSender es;
-
 
 
     public ResponseEntity<?> createOrder(OrderDTO orderDTO) throws RazorpayException {
@@ -124,8 +129,8 @@ public class OrderService {
             oe.setMobilenumber(orderDTO.getMobilenumber());
 
             oe.setStatus(OrderStatus.PREPARATION.toString());
-
-            oe.setOrderid("");
+            String orderid = "order_"+ RandomStringGenerator.generateRandomString(14);
+            oe.setOrderid(orderid);
             oe.setPaymentid("");
             oe.setPaymentsignature("");
 
@@ -145,6 +150,7 @@ public class OrderService {
             OrderModel oe = or.findByorderid(paymentDTO.getOrderid());
             oe.setPaymentid(paymentDTO.getPaymentid());
             oe.setPaymentsignature(paymentDTO.getPaymentsignature());
+            oe.setPaymentverification("NOTVERIFIED");
             or.save(oe);
             log.info("Payment details Updated");
             SettingModel s = ss.getSettings();
@@ -165,9 +171,9 @@ public class OrderService {
                 String replacedSubject = ReplaceText(EmailConstants.intialSubject,oe);
                 String repalcedBody = ReplaceText(EmailConstants.intialBody, oe);
                 SimpleMailMessage sm = PrepareEmail(replacedSubject,repalcedBody,
-                        oe.getEmailaddress(),FromMail);
+                        FromMail,FromMail);
 
-                es.SendEmail(sm);
+                es.SendEmailBussiness(sm).join();;
 
                 log.info("Email delivered for Bussiness Contact");
 
@@ -208,13 +214,31 @@ public class OrderService {
         }
 
     }
+
+    public ResponseEntity<Boolean> VerfiyPaymentDetails(PaymentVerificationDTO paymentVerificationDTO) {
+        try{
+            OrderModel oe = or.findByorderid(paymentVerificationDTO.getOrderid());
+            if(oe != null){
+                JSONObject options = new JSONObject();
+                options.put("razorpay_order_id", paymentVerificationDTO.getOrderid());
+                options.put("razorpay_payment_id", paymentVerificationDTO.getPaymentid());
+                options.put("razorpay_signature", oe.getPaymentsignature());
+
+                boolean res = Utils.verifyPaymentSignature(options,RAZORKEYSECRET);
+                if(res){
+                    oe.setPaymentverification("VERIFIED");
+                    or.save(oe);
+                }
+                return ResponseEntity.ok(res);
+            }
+
+            return ResponseEntity.badRequest().body(false);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+
+        return ResponseEntity.badRequest().body(false);
+    }
 }
 
-//public ResponseEntity<?> testwithjwt(Authentication auth){
-//    String username = auth.getName();
-//    var res = new HashMap<String, Object>();
-//    res.put("username", username);
-//    var us = pr.findByusername(username);
-//    res.put("pgOwnerDetails",us);
-//    return ResponseEntity.ok(res);
-//}

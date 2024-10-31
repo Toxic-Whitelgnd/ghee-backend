@@ -3,6 +3,7 @@ package com.tarun.ghee.controller.payment;
 import com.razorpay.RazorpayException;
 import com.tarun.ghee.dto.order.OrderDTO;
 import com.tarun.ghee.dto.order.PaymentDTO;
+import com.tarun.ghee.dto.order.PaymentVerificationDTO;
 import com.tarun.ghee.services.order.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,11 @@ public class PaymentController {
     @PutMapping("/updateorder")
     public ResponseEntity<?> updateOrder(@RequestBody PaymentDTO paymentDTO){
         return os.updateOrder(paymentDTO);
+    }
+
+    @PostMapping("/verifypayment")
+    public ResponseEntity<Boolean> verifyPaymentDetails(@RequestBody  PaymentVerificationDTO paymentVerificationDTO){
+        return os.VerfiyPaymentDetails(paymentVerificationDTO);
     }
 
 }

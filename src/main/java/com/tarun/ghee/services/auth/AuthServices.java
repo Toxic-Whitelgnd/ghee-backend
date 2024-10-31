@@ -21,8 +21,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class AuthServices {
-    @Autowired
-    private AuthenticationManager am;
+
 
     @Autowired
     private AuthRepositary ar;

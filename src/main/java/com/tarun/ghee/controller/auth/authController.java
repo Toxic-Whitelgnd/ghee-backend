@@ -20,8 +20,7 @@ public class authController {
     @Autowired
     private AuthServices as;
 
-    @Autowired
-    private AuthenticationManager am;
+
 
     @Autowired
     private ProfileServices ps;

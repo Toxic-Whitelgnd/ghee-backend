@@ -18,8 +18,8 @@ public class EmailConstants {
             "Shipping Information:\n" +
             "- Delivery Address: ADDRESS, PINCODE, DISTRICT, STATE\n" +
             "\n" +
-//            "Items Ordered:\n" +
-//            "ITEMS\n" +
+            "Items Ordered:\n" +
+            "ITEMS\n" +
             "\n" +
             "Please ensure that the order is processed promptly to meet the delivery timelines. The customer expects delivery within the next 1-2 business days. If there are any issues or delays, kindly inform the customer as soon as possible.\n" +
             "\n" +
