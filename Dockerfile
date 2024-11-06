@@ -3,6 +3,6 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
-COPY --FROM=build /target/tarun=0.0.1-SNAPSHOT.jar tarun.jar
+COPY --from=build /target/tarun=0.0.1-SNAPSHOT.jar tarun.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","tarun.jar"]
